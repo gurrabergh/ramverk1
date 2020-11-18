@@ -1,6 +1,6 @@
 <?php
 
-namespace Anax\Ip;
+namespace Anax\Ip2;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
@@ -18,7 +18,7 @@ use Anax\Commons\ContainerInjectableTrait;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class IpApiController implements ContainerInjectableInterface
+class IpController2 implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -47,17 +47,15 @@ class IpApiController implements ContainerInjectableInterface
     //  *
     //  * @return string
     //  */
-    public function indexActionGet() : object
+    public function indexAction() : object
     {
+        $ipAd = new GetIp();
         $title = "IP-validate";
         $page = $this->di->get("page");
-        $url = "{$this->di->request->getBaseUrl()}/ip-api";
+        $data["ip"] = $ipAd->getIp();
+        $page->add('ip2/index', $data);
 
-        $escapedUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
-        $data["url"] = $escapedUrl ?? null;
-
-        $page->add('ip/api-index', $data);
         return $page->render([
             "title" => $title,
         ]);
@@ -71,31 +69,22 @@ class IpApiController implements ContainerInjectableInterface
      *
      * @return object
      */
-    public function indexActionPost() : array
+    public function validateActionPost() : object
     {
         $request = $this->di->request;
         $ipAd = $request->getPost("ip");
 
-        if (filter_var($ipAd, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $res = "true";
-            $type = 'ipv6';
-            $host = gethostbyaddr($ipAd);
-        } elseif (filter_var($ipAd, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $res = "true";
-            $type = 'ipv4';
-            $host = gethostbyaddr($ipAd);
-        } else {
-            $res = "false";
-            $host = "invalid";
-            $type = 'invalid';
-        }
-        $data = [
-            "valid" => $res,
-            "ip" => $ipAd,
-            "type" => $type,
-            "domain" => $host
-        ];
+        $ipStack = new IpStack();
 
-        return [$data];
+        $data = $ipStack->getInfo($ipAd);
+
+        $page = $this->di->get("page");
+        $page->add('ip2/index', $data);
+        $page->add('ip2/result', $data);
+        $title = "IP-validate";
+
+        return $page->render([
+            "title" => $title,
+        ]);
     }
 }

@@ -39,6 +39,11 @@ return [
             "title" => "Validera IP",
         ],
         [
+            "text" => "IP-Geo",
+            "url" => "ip2",
+            "title" => "Validera IP Geo",
+        ],
+        [
             "text" => "Om",
             "url" => "om",
             "title" => "Om denna webbplats.",

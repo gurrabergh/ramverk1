@@ -1,6 +1,6 @@
 <?php
 
-namespace Anax\Ip;
+namespace Anax\Ip2;
 
 use Anax\Commons\ContainerInjectableInterface;
 use Anax\Commons\ContainerInjectableTrait;
@@ -18,7 +18,7 @@ use Anax\Commons\ContainerInjectableTrait;
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class IpApiController implements ContainerInjectableInterface
+class IpApiController2 implements ContainerInjectableInterface
 {
     use ContainerInjectableTrait;
 
@@ -49,15 +49,16 @@ class IpApiController implements ContainerInjectableInterface
     //  */
     public function indexActionGet() : object
     {
-        $title = "IP-validate";
+        $ipAd = new GetIp();
+        $title = "IP-validate GEO";
         $page = $this->di->get("page");
-        $url = "{$this->di->request->getBaseUrl()}/ip-api";
-
+        $url = "{$this->di->request->getBaseUrl()}/ip-api2";
+        $data["ip"] = $ipAd->getIp();
         $escapedUrl = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
 
         $data["url"] = $escapedUrl ?? null;
 
-        $page->add('ip/api-index', $data);
+        $page->add('ip2/api-index', $data);
         return $page->render([
             "title" => $title,
         ]);
@@ -76,25 +77,9 @@ class IpApiController implements ContainerInjectableInterface
         $request = $this->di->request;
         $ipAd = $request->getPost("ip");
 
-        if (filter_var($ipAd, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-            $res = "true";
-            $type = 'ipv6';
-            $host = gethostbyaddr($ipAd);
-        } elseif (filter_var($ipAd, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-            $res = "true";
-            $type = 'ipv4';
-            $host = gethostbyaddr($ipAd);
-        } else {
-            $res = "false";
-            $host = "invalid";
-            $type = 'invalid';
-        }
-        $data = [
-            "valid" => $res,
-            "ip" => $ipAd,
-            "type" => $type,
-            "domain" => $host
-        ];
+        $ipStack = new IpStack();
+
+        $data = $ipStack->getInfo($ipAd);
 
         return [$data];
     }
