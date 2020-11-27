@@ -6943,3 +6943,9 @@ code {
 .toc.selected {
   background-color: black;
 }
+.weather {
+  width: 75%;
+}
+.weather td {
+  text-align: center;
+}

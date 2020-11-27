@@ -45,6 +45,11 @@ return [
             "title" => "Validera IP Geo",
         ],
         [
+            "text" => "Väder",
+            "url" => "weather",
+            "title" => "Väderprognos",
+        ],
+        [
             "text" => "Om",
             "url" => "om",
             "title" => "Om denna webbplats.",
