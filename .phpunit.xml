@@ -11,6 +11,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <directory suffix=".php">vendor/gurrabergh/weather/src</directory>
         </whitelist>
     </filter>
 
