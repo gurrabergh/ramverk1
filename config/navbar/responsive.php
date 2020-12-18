@@ -50,6 +50,11 @@ return [
             "title" => "Väderprognos",
         ],
         [
+            "text" => "Book",
+            "url" => "book",
+            "title" => "Books",
+        ],
+        [
             "text" => "Om",
             "url" => "om",
             "title" => "Om denna webbplats.",
